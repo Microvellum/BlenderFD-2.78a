@@ -827,48 +827,61 @@ void OBJECT_OT_empty_add(wmOperatorType *ot)
 
 static int empty_drop_named_image_invoke(bContext *C, wmOperator *op, const wmEvent *event)
 {
-	Scene *scene = CTX_data_scene(C);
 
-	Base *base = NULL;
-	Image *ima = NULL;
-	Object *ob = NULL;
+	char path[FILE_MAX];
+	PointerRNA ptr;
 
-	ima = (Image *)WM_operator_drop_load_path(C, op, ID_IM);
-	if (!ima) {
-		return OPERATOR_CANCELLED;
-	}
-	/* handled below */
-	id_us_min((ID *)ima);
+	RNA_string_get(op->ptr, "filepath", path);
 
-	base = ED_view3d_give_base_under_cursor(C, event->mval);
-
-	/* if empty under cursor, then set object */
-	if (base && base->object->type == OB_EMPTY) {
-		ob = base->object;
-		WM_event_add_notifier(C, NC_SCENE | ND_OB_ACTIVE, scene);
-	}
-	else {
-		/* add new empty */
-		unsigned int layer;
-		float rot[3];
-
-		if (!ED_object_add_generic_get_opts(C, op, 'Z', NULL, rot, NULL, &layer, NULL))
-			return OPERATOR_CANCELLED;
-
-		ob = ED_object_add_type(C, OB_EMPTY, NULL, NULL, rot, false, layer);
-
-		/* add under the mouse */
-		ED_object_location_from_view(C, ob->loc);
-		ED_view3d_cursor3d_position(C, ob->loc, event->mval);
-	}
-
-	BKE_object_empty_draw_type_set(ob, OB_EMPTY_IMAGE);
-
-	id_us_min(ob->data);
-	ob->data = ima;
-	id_us_plus(ob->data);
+	WM_operator_properties_create(&ptr, "FD_DRAGDROP_OT_drag_and_drop");
+	RNA_string_set(&ptr, "filepath", path);
+	WM_operator_name_call(C, "FD_DRAGDROP_OT_drag_and_drop", WM_OP_INVOKE_REGION_WIN, &ptr);
+	WM_operator_properties_free(&ptr);
 
 	return OPERATOR_FINISHED;
+
+//	Scene *scene = CTX_data_scene(C);
+//
+//	Base *base = NULL;
+//	Image *ima = NULL;
+//	Object *ob = NULL;
+//
+//	ima = (Image *)WM_operator_drop_load_path(C, op, ID_IM);
+//	if (!ima) {
+//		return OPERATOR_CANCELLED;
+//	}
+//	/* handled below */
+//	id_us_min((ID *)ima);
+//
+//	base = ED_view3d_give_base_under_cursor(C, event->mval);
+//
+//	/* if empty under cursor, then set object */
+//	if (base && base->object->type == OB_EMPTY) {
+//		ob = base->object;
+//		WM_event_add_notifier(C, NC_SCENE | ND_OB_ACTIVE, scene);
+//	}
+//	else {
+//		/* add new empty */
+//		unsigned int layer;
+//		float rot[3];
+//
+//		if (!ED_object_add_generic_get_opts(C, op, 'Z', NULL, rot, NULL, &layer, NULL))
+//			return OPERATOR_CANCELLED;
+//
+//		ob = ED_object_add_type(C, OB_EMPTY, NULL, NULL, rot, false, layer);
+//
+//		/* add under the mouse */
+//		ED_object_location_from_view(C, ob->loc);
+//		ED_view3d_cursor3d_position(C, ob->loc, event->mval);
+//	}
+//
+//	BKE_object_empty_draw_type_set(ob, OB_EMPTY_IMAGE);
+//
+//	id_us_min(ob->data);
+//	ob->data = ima;
+//	id_us_plus(ob->data);
+//
+//	return OPERATOR_FINISHED;
 }
 
 void OBJECT_OT_drop_named_image(wmOperatorType *ot)
@@ -876,8 +889,8 @@ void OBJECT_OT_drop_named_image(wmOperatorType *ot)
 	PropertyRNA *prop;
 
 	/* identifiers */
-	ot->name = "Add Empty Image/Drop Image To Empty";
-	ot->description = "Add an empty image type to scene with data";
+	ot->name = "Fluid Designer Drag/Drop";
+	ot->description = "Calls the Fluid Designer Drag and Drop Operator";
 	ot->idname = "OBJECT_OT_drop_named_image";
 
 	/* api callbacks */
@@ -890,7 +903,7 @@ void OBJECT_OT_drop_named_image(wmOperatorType *ot)
 	/* properties */
 	prop = RNA_def_string(ot->srna, "filepath", NULL, FILE_MAX, "Filepath", "Path to image file");
 	RNA_def_property_flag(prop, PROP_HIDDEN | PROP_SKIP_SAVE);
-	RNA_def_boolean(ot->srna, "relative_path", true, "Relative Path", "Select the file relative to the blend file");
+	RNA_def_boolean(ot->srna, "relative_path", false, "Relative Path", "Select the file relative to the blend file");
 	RNA_def_property_flag(prop, PROP_HIDDEN | PROP_SKIP_SAVE);
 	prop = RNA_def_string(ot->srna, "name", NULL, MAX_ID_NAME - 2, "Name", "Image name to assign");
 	RNA_def_property_flag(prop, PROP_HIDDEN | PROP_SKIP_SAVE);
