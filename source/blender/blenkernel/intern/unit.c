@@ -131,7 +131,7 @@ static const struct bUnitDef buMetricLenDef[] = {
 #endif
 	{NULL, NULL, NULL,	NULL, NULL, 0.0, 0.0}
 };
-static const struct bUnitCollection buMetricLenCollection = {buMetricLenDef, 3, 0, sizeof(buMetricLenDef) / sizeof(bUnitDef)};
+static const struct bUnitCollection buMetricLenCollection = {buMetricLenDef, 6, 0, sizeof(buMetricLenDef) / sizeof(bUnitDef)};
 
 static struct bUnitDef buImperialLenDef[] = {
 	{"mile", "miles",       "mi", "m", "Miles",      UN_SC_MI, 0.0,  B_UNIT_DEF_NONE},
@@ -143,7 +143,7 @@ static struct bUnitDef buImperialLenDef[] = {
 	{"thou", "thou",        "thou", "mil", "Thou",   UN_SC_MIL, 0.0, B_UNIT_DEF_NONE}, /* plural for thou has no 's' */
 	{NULL, NULL, NULL, NULL, NULL, 0.0, 0.0}
 };
-static struct bUnitCollection buImperialLenCollection = {buImperialLenDef, 4, 0, sizeof(buImperialLenDef) / sizeof(bUnitDef)};
+static struct bUnitCollection buImperialLenCollection = {buImperialLenDef, 5, 0, sizeof(buImperialLenDef) / sizeof(bUnitDef)};
 
 /* Areas */
 static struct bUnitDef buMetricAreaDef[] = {
@@ -169,7 +169,7 @@ static struct bUnitDef buImperialAreaDef[] = {
 	{"square thou", "square thous",       "sq mil", NULL,  "Square Thous", UN_SC_MIL * UN_SC_MIL, 0.0,    B_UNIT_DEF_NONE},
 	{NULL, NULL, NULL, NULL, NULL, 0.0, 0.0}
 };
-static struct bUnitCollection buImperialAreaCollection = {buImperialAreaDef, 4, 0, sizeof(buImperialAreaDef) / sizeof(bUnitDef)};
+static struct bUnitCollection buImperialAreaCollection = {buImperialAreaDef, 5, 0, sizeof(buImperialAreaDef) / sizeof(bUnitDef)};
 
 /* Volumes */
 static struct bUnitDef buMetricVolDef[] = {
@@ -183,7 +183,7 @@ static struct bUnitDef buMetricVolDef[] = {
 	{"cubic micrometer", "cubic micrometers", "µm³",  "um3",  "Cubic Micrometers", UN_SC_UM * UN_SC_UM * UN_SC_UM,    0.0, B_UNIT_DEF_NONE},
 	{NULL, NULL, NULL,  NULL, NULL, 0.0, 0.0}
 };
-static struct bUnitCollection buMetricVolCollection = {buMetricVolDef, 3, 0, sizeof(buMetricVolDef) / sizeof(bUnitDef)};
+static struct bUnitCollection buMetricVolCollection = {buMetricVolDef, 6, 0, sizeof(buMetricVolDef) / sizeof(bUnitDef)};
 
 static struct bUnitDef buImperialVolDef[] = {
 	{"cubic mile", "cubic miles",       "cu mi",  "cu m", "Cubic Miles", UN_SC_MI * UN_SC_MI * UN_SC_MI, 0.0,     B_UNIT_DEF_NONE},
@@ -195,7 +195,7 @@ static struct bUnitDef buImperialVolDef[] = {
 	{"cubic thou", "cubic thous",       "cu mil", NULL,   "Cubic Thous", UN_SC_MIL * UN_SC_MIL * UN_SC_MIL, 0.0,  B_UNIT_DEF_NONE},
 	{NULL, NULL, NULL, NULL, NULL, 0.0, 0.0}
 };
-static struct bUnitCollection buImperialVolCollection = {buImperialVolDef, 4, 0, sizeof(buImperialVolDef) / sizeof(bUnitDef)};
+static struct bUnitCollection buImperialVolCollection = {buImperialVolDef, 5, 0, sizeof(buImperialVolDef) / sizeof(bUnitDef)};
 
 /* Mass */
 static struct bUnitDef buMetricMassDef[] = {
@@ -313,26 +313,26 @@ static const bUnitDef *unit_default(const bUnitCollection *usys)
 static const bUnitDef *unit_best_fit(
         double value, const bUnitCollection *usys, const bUnitDef *unit_start, int suppress)
 {
-	const bUnitDef *unit;
-	double value_abs = value > 0.0 ? value : -value;
-
-	for (unit = unit_start ? unit_start : usys->units; unit->name; unit++) {
-
-		if (suppress && (unit->flag & B_UNIT_DEF_SUPPRESS))
-			continue;
-
-		/* scale down scalar so 1cm doesnt convert to 10mm because of float error */
-		if (UNLIKELY(unit->flag & B_UNIT_DEF_TENTH)) {
-			if (value_abs >= unit->scalar * (0.1 - EPS)) {
-				return unit;
-			}
-		}
-		else {
-			if (value_abs >= unit->scalar * (1.0 - EPS)) {
-				return unit;
-			}
-		}
-	}
+//	const bUnitDef *unit;
+//	double value_abs = value > 0.0 ? value : -value;
+//
+//	for (unit = unit_start ? unit_start : usys->units; unit->name; unit++) {
+//
+//		if (suppress && (unit->flag & B_UNIT_DEF_SUPPRESS))
+//			continue;
+//
+//		/* scale down scalar so 1cm doesnt convert to 10mm because of float error */
+//		if (UNLIKELY(unit->flag & B_UNIT_DEF_TENTH)) {
+//			if (value_abs >= unit->scalar * (0.1 - EPS)) {
+//				return unit;
+//			}
+//		}
+//		else {
+//			if (value_abs >= unit->scalar * (1.0 - EPS)) {
+//				return unit;
+//			}
+//		}
+//	}
 
 	return unit_default(usys);
 }
