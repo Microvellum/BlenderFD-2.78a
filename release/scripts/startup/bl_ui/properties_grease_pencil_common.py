@@ -88,6 +88,13 @@ class GreasePencilDrawingToolsPanel:
     bl_category = "Grease Pencil"
     bl_region_type = 'TOOLS'
 
+    @classmethod
+    def poll(cls, context):
+        if context.scene.mv.ui.use_default_blender_interface:
+            return True
+        else:
+            return False
+
     @staticmethod
     def draw(self, context):
         layout = self.layout
@@ -237,6 +244,13 @@ class GreasePencilBrushPanel:
     bl_label = "Drawing Brushes"
     bl_category = "Grease Pencil"
     bl_region_type = 'TOOLS'
+
+    @classmethod
+    def poll(cls, context):
+        if context.scene.mv.ui.use_default_blender_interface:
+            return True
+        else:
+            return False
 
     @staticmethod
     def draw(self, context):

@@ -1941,7 +1941,11 @@ def render_opengl(self, context):
     
     img.gl_load(0, bgl.GL_NEAREST, bgl.GL_NEAREST)
 
-    tex = img.bindcode
+    # 2.77 API change
+    if bpy.app.version >= (2, 77, 0):
+        tex = img.bindcode[0]
+    else:
+        tex = img.bindcode
     
     if context.scene.name in bpy.data.images:
         old_img = bpy.data.images[context.scene.name]
