@@ -38,7 +38,13 @@ class View3DPanel:
     bl_space_type = 'VIEW_3D'
     bl_region_type = 'TOOLS'
 
-
+    @classmethod
+    def poll(cls, context):
+        if context.scene.mv.ui.use_default_blender_interface:
+            return True
+        else:
+            return False
+        
 # **************** standard tool clusters ******************
 
 # Keyframing tools
